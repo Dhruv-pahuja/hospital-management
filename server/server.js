@@ -9,10 +9,9 @@ connectDB();
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
-// Add routes for other functionalities
-// app.use('/api/opdQueue', require('./routes/opdQueue'));
-// app.use('/api/beds', require('./routes/beds'));
-// app.use('/api/inventory', require('./routes/inventory'));
+app.use('/api/opdQueue', require('./routes/opdQueue'));
+app.use('/api/beds', require('./routes/beds'));
+app.use('/api/inventory', require('./routes/inventory'));
 // app.use('/api/patients', require('./routes/patients'));
 
 const PORT = process.env.PORT || 4000;
