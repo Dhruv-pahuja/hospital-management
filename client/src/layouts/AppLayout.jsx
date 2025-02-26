@@ -3,15 +3,11 @@
 import useTokenStore from '../store';
 import { Link, Navigate, Outlet } from "react-router-dom";
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const AppLayout = () => {
     const { token, setToken } = useTokenStore((state) => state);
 
-    if (!token) {
-        return <Navigate to="/auth/login" replace />;
-    }
-
-    
 
     return (
         <div>
@@ -19,6 +15,7 @@ const AppLayout = () => {
             <main>
                 <Outlet /> 
             </main>
+            <Footer />
         </div>
     );
 }

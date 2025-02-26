@@ -1,87 +1,66 @@
-/* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
-import useTokenStore from '../store';
-export const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useTokenStore from "../store"; // Assuming Zustand for token management
 
-  const { token, setToken } = useTokenStore((state) => state);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+const Header = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { token, removeToken } = useTokenStore();
 
   const handleLogout = () => {
-    setToken("");
-  }
+    removeToken();
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/auth/login");
+  };
 
   return (
-    <nav className="p-4 flex justify-between items-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <h1 className="text-lg font-bold">PatientFirst - CureCode</h1>
-      <div className="hidden md:flex space-x-4">
-        {isLoggedIn ? (
+    <header className="sticky top-0 w-full left-0 z-50 bg-white flex justify-between items-center py-4 px-8 shadow-md">
+      <div className="flex items-center">
+        <img
+          src="https://romaletodiani.github.io/Hospital-Website/assets/Logo-53d3708b.png"
+          width="40px"
+          height="40px"
+          alt="Your Health Logo"
+        />
+        <h1 className="ml-3 text-2xl font-extrabold tracking-tight text-blue-900">
+          PatientFirst
+        </h1>
+      </div>
+      <div className="flex space-x-6">
+        {[
+          { name: "Home", path: "/" },
+          { name: "Specialists", path: "/specialists" },
+          { name: "Services", path: "/services" },
+          { name: "Contact Us", path: "/contactus" },
+        ].map(({ name, path, isButton }) => (
+          <Link key={path} to={path}>
+            <button
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                location.pathname === path ? "text-blue-600 font-bold" : "text-gray-500"
+              } hover:text-blue-600 transition duration-300 ${isButton ? "bg-red-500 text-white font-semibold text-xl rounded-full hover:bg-red-600 shadow-lg" : ""}`}
+            >
+              {name}
+            </button>
+          </Link>
+        ))}
+
+        {!token ? (
+          <Link to="/auth/login">
+            <button className="px-4 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-blue-600 transition duration-300">
+              Login/Sign Up
+            </button>
+          </Link>
+        ) : (
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+            className="px-4 py-2 rounded-md text-sm font-medium text-red-500 hover:text-red-700 transition duration-300"
           >
             Logout
           </button>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-            >
-              Sign Up
-            </Link>
-          </>
         )}
       </div>
-      <button
-        className="md:hidden text-xl"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
-      {isMenuOpen && (
-        <div className="absolute top-16 right-4 bg-gray-200 dark:bg-gray-800 w-48 p-4 rounded-lg shadow-lg flex flex-col space-y-2 md:hidden">
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
-        </div>
-      )}
-    </nav>
+    </header>
   );
 };
 
-export default Navbar;
+export default Header;

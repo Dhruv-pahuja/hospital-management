@@ -1,15 +1,8 @@
-import React from "react";
+import "react";
 import Count from "./Count";
 import Banner from "./Banner";
 import Service from "./Service";
-import GoogleTranslate from "./GoogleTranslate";
-import EmergencyButton from "./EmergencyButton";
-import SearchHospitals from "./SearchHospitals";
-import ButtonGroup from "./ButtonGroup";
-import DoctorsPage from "./DoctorsPage";
-import Header from "./Header";
 import Main from "./Main";
-import { FaCalendarCheck, FaHospital, FaUserMd } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -26,35 +19,21 @@ function Home() {
         <Count number="10,000+" label="Happy Patients" />
       </section>
 
-      <div className="w-full flex justify-center mt-14 ">
-        <div className="w-[50%]">
-          <SearchHospitals onSearch="Pune" />
-        </div>
-      </div>
+      
       <div className="flex justify-center mt-7 mb-7">
         <div className="w-full max-w-4xl flex justify-around space-x-6">
           {/* Button for Appointment */}
           <Link to="/appointment"> 
-          <EmergencyButton
-            tx="Book an Appointment"
-            icon={<FaCalendarCheck className="text-xl" />}
-          />
+          
           </Link>
 
           {/* Button for Hospitals */}
           <Link to="/hospitals">
-          <EmergencyButton
-            tx="Hospitals"
-            icon={<FaHospital className="text-xl" />}
-          />
+          
           </Link>
 
           {/* Button for Doctors */}
-          <EmergencyButton
-            tx="Doctors"
-            icon={<FaUserMd className="text-xl" />}
-            link="/doctors" // Ensure this is the correct path
-          />
+        
         </div>
       </div>
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
-import { FaLock, FaUser, FaEnvelope } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { login, register } from "../utils/api";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ email: "", password: "", name: "", role: "user" });
+  const [formData, setFormData] = useState({ email: "", password: "", name: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setError("");
@@ -25,11 +25,15 @@ const LoginPage = () => {
       if (isLogin) {
         const { data } = await login({ email: formData.email, password: formData.password });
         localStorage.setItem("token", data.token);
-        navigate("/dashboard");
+        localStorage.setItem("role", data.role);
+
+        if (data.role === "patient") navigate("/dashboard/patient");
+        else if (data.role === "doctor") navigate("/dashboard/doctor");
+        else if (data.role === "staff" || data.role === "admin") navigate("/dashboard/admin");
+        else navigate("/");
       } else {
-        await register(formData); 
+        await register({ ...formData, role: "patient" });
         alert("Registration successful! Please log in.");
-        navigate("/login");
         setIsLogin(true);
       }
     } catch (err) {
@@ -49,74 +53,42 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
-            <>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  placeholder="Full Name"
-                  required
-                />
-              </div>
-
-              {/* Role Dropdown */}
-              <div>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  required
-                >
-                  <option value="user">patient</option>
-                </select>
-              </div>
-            </>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              className="w-full p-3 border rounded-lg"
+              onChange={handleChange}
+              required
+            />
           )}
-
-          <div className="relative">
-            <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="Email Address"
-              required
-            />
-          </div>
-
-          <div className="relative">
-            <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="Password"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all duration-300"
-          >
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            className="w-full p-3 border rounded-lg"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className="w-full p-3 border rounded-lg"
+            onChange={handleChange}
+            required
+          />
+          <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg">
             {isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
 
-        <div className="text-center mt-4">
-          <button onClick={toggleForm} className="text-blue-600 hover:underline">
-            {isLogin ? "Need an account? Sign Up" : "Already have an account? Login"}
+        <p className="text-center mt-4">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button onClick={toggleForm} className="text-blue-600 font-semibold">
+            {isLogin ? "Sign Up" : "Login"}
           </button>
-        </div>
+        </p>
       </div>
     </div>
   );
