@@ -7,17 +7,29 @@ const PatientDashboard = () => {
     const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
-        // Fetch medical data
-        axios.get("/api/patient/medical-data")
-            .then(response => setMedicalData(response.data))
-            .catch(error => console.error("Error fetching medical data:", error));
+        const token = localStorage.getItem("token");
 
-        // Fetch appointments
-        axios.get("/api/patient/appointments")
-            .then(response => {
-                setAppointments(Array.isArray(response.data) ? response.data : []);
-            })
-            .catch(error => console.error("Error fetching appointments:", error));
+        const fetchData = async () => {
+            try {
+                const medicalResponse = await axios.get("/api/patient/medical-data", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setMedicalData(medicalResponse.data);
+            } catch (error) {
+                console.error("Error fetching medical data:", error);
+            }
+
+            try {
+                const appointmentResponse = await axios.get("/api/patient/appointments", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setAppointments(Array.isArray(appointmentResponse.data) ? appointmentResponse.data : []);
+            } catch (error) {
+                console.error("Error fetching appointments:", error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     return (
@@ -46,7 +58,7 @@ const PatientDashboard = () => {
                 <h3 className="text-xl font-semibold mb-2">Appointments</h3>
                 <ul>
                     {appointments.length ? appointments.map(appt => (
-                        <li key={appt.id} className="border-b py-2">
+                        <li key={appt._id} className="border-b py-2">
                             {appt.doctorName} - {new Date(appt.date).toLocaleDateString()}
                         </li>
                     )) : <p>No upcoming appointments.</p>}

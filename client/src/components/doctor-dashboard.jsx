@@ -7,20 +7,19 @@ const DoctorDashboard = () => {
     const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
-        // Fetch treated patients
-        axios.get("/api/doctor/treated-patients")
+        axios.get("/api/doctor/treated-patients", { withCredentials: true })
             .then(response => {
                 setPatients(Array.isArray(response.data) ? response.data : []);
             })
-            .catch(error => console.error("Error fetching patients:", error));
-
-        // Fetch upcoming appointments
-        axios.get("/api/doctor/upcoming-appointments")
+            .catch(error => console.error("Error fetching treated patients:", error));
+    
+        axios.get("/api/doctor/upcoming-appointments", { withCredentials: true })
             .then(response => {
                 setAppointments(Array.isArray(response.data) ? response.data : []);
             })
             .catch(error => console.error("Error fetching appointments:", error));
     }, []);
+    
 
     return (
         <div className="min-h-screen p-4 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 relative">

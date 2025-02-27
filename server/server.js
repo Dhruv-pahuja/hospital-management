@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cors = require('cors');
 
+
 dotenv.config();
 const app = express();
 connectDB();
@@ -19,6 +20,9 @@ app.use('/api/opdQueue', require('./routes/opdQueue'));
 app.use('/api/beds', require('./routes/beds'));
 app.use('/api/inventory', require('./routes/inventory'));
 // app.use('/api/patients', require('./routes/patients'));
+app.use("/api/patient", require("./routes/patientRoutes"));
+
+app.use("/api/staff", require("./routes/adminRoutes"));
 
 const PORT = process.env.PORT || 4000;
 
