@@ -78,7 +78,7 @@ const LoginPage = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg">
+          <button type="submit"  onClick={handleSubmit} className="w-full bg-blue-600 text-white p-3 rounded-lg">
             {isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
