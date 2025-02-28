@@ -15,7 +15,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use('/api/auth', require('./routes/auth'));
+app.use("/api/auth", require("./routes/auth"));
 app.use('/api/opdQueue', require('./routes/opdQueue'));
 app.use('/api/beds', require('./routes/beds'));
 app.use('/api/inventory', require('./routes/inventory'));

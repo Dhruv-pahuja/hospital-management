@@ -5,14 +5,12 @@ import AuthLayout from "./layouts/AuthLayout";
 import DoctorDashboard from "./components/doctor-dashboard";
 import PatientDashboard from "./components/patient-dashboard";
 import AdminDashboard from "./components/admin-dashboard";
-// import ProtectedRoute from "./components/ProtectedRoute";
-import Logout from "./components/LogoutBtn";
 import Home from "./components/Home";
 import Specialists from "./components/Specialists";
 import Services from "./components/Services";
 import ContactUs from "./components/ContactUs";
-// import Emergency from "./components/Emergency";
-
+import ProtectedRoute from "./components/ProtectedRoute"; 
+import SignupPage from "./pages/SignupPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,18 +27,39 @@ const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
+      
     ],
   },
   {
     path: "/dashboard",
-    // element: <ProtectedRoute />, // Protect dashboard routes
     children: [
-      { path: "doctor", element: <DoctorDashboard /> },
-      { path: "patient", element: <PatientDashboard /> },
-      { path: "admin", element: <AdminDashboard /> },
+      {
+        path: "doctor",
+        element: (
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <DoctorDashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "patient",
+        element: (
+          // <ProtectedRoute allowedRoles={["patient"]}>
+            <PatientDashboard />
+          // {/* </ProtectedRoute> */}
+        ),
+      },
+      {
+        path: "admin",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "staff"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
-  { path: "/logout", element: <Logout /> },
 ]);
 
 export default router;

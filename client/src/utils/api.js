@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL });
+const API = axios.create({
+    baseURL: "http://localhost:4000/api",
+    headers: { "Content-Type": "application/json" }
+});
 
-export const register = (data) => API.post('/api/auth/register', data);
-export const login = (data) => API.post('/api/auth/login', data);
-export const getBedAvailability = () => API.get('/api/beds');
-export const getInventory = () => API.get('/api/inventory');
-export const getAppointments = () => API.get('/api/appointments');
+export const registerUser = (userData) => API.post("/auth/register", userData);
+export const loginUser = (userData) => API.post("/auth/login", userData);

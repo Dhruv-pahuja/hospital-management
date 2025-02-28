@@ -1,15 +1,14 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useTokenStore from "../store"; // Assuming Zustand for token management
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, removeToken } = useTokenStore();
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    removeToken();
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    logout();
     navigate("/auth/login");
   };
 
@@ -32,19 +31,19 @@ const Header = () => {
           { name: "Specialists", path: "/specialists" },
           { name: "Services", path: "/services" },
           { name: "Contact Us", path: "/contactus" },
-        ].map(({ name, path, isButton }) => (
+        ].map(({ name, path }) => (
           <Link key={path} to={path}>
             <button
               className={`px-4 py-2 rounded-md text-sm font-medium ${
                 location.pathname === path ? "text-blue-600 font-bold" : "text-gray-500"
-              } hover:text-blue-600 transition duration-300 ${isButton ? "bg-red-500 text-white font-semibold text-xl rounded-full hover:bg-red-600 shadow-lg" : ""}`}
+              } hover:text-blue-600 transition duration-300`}
             >
               {name}
             </button>
           </Link>
         ))}
 
-        {!token ? (
+        {!user ? (
           <Link to="/auth/login">
             <button className="px-4 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-blue-600 transition duration-300">
               Login/Sign Up
