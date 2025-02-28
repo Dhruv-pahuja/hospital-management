@@ -11,6 +11,8 @@ import Services from "./components/Services";
 import ContactUs from "./components/ContactUs";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import SignupPage from "./pages/SignupPage";
+import QueueSystem from "./components/QueueSystem";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -37,9 +39,9 @@ const router = createBrowserRouter([
       {
         path: "doctor",
         element: (
-          <ProtectedRoute allowedRoles={["doctor"]}>
+          // <ProtectedRoute allowedRoles={["doctor"]}>
             <DoctorDashboard />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         ),
       },
       {
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "/queue",
+    element: <QueueSystem />,
   },
 ]);
 
