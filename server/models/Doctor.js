@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const doctorSchema = new mongoose.Schema({
     name: { type: String, required: true },
     department: { type: String, required: true },
+    description: { type: String, required: true }, 
     treatedPatients: [{ 
         name: String,
         treatmentDate: Date
@@ -14,4 +15,3 @@ const doctorSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Doctor", doctorSchema);
-

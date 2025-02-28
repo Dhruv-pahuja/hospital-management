@@ -1,10 +1,18 @@
-import express from "express";
-import { getTreatedPatients, getUpcomingAppointments } from "../controllers/doctorController.js";
-import authMiddleware from "../middlewares/authMiddleware.js"; // Ensure only logged-in doctors access
-
+const express = require("express");
+const Doctor = require("../models/Doctor");
+const { getTreatedPatients, getUpcomingAppointments } = require("../controllers/doctorController");
+const authMiddleware = require("../middelwares/authMiddelware");
 const router = express.Router();
 
 router.get("/treated-patients", authMiddleware, getTreatedPatients);
 router.get("/upcoming-appointments", authMiddleware, getUpcomingAppointments);
 
-export default router;
+router.get("/all", async (req, res) => {
+    try {
+        const doctors = await Doctor.find({}, "name"); 
+        res.json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching doctors" });
+    }
+});
+module.exports = router;

@@ -1,9 +1,8 @@
-import Doctor from "../models/Doctor.js";
+const Doctor = require("../models/Doctor");
 
-// Fetch treated patients
-export const getTreatedPatients = async (req, res) => {
+ const getTreatedPatients = async (req, res) => {
     try {
-        const doctor = await Doctor.findById(req.user.id); // Assuming `req.user.id` contains the logged-in doctor's ID
+        const doctor = await Doctor.findById(req.user.id); 
         if (!doctor) return res.status(404).json({ message: "Doctor not found" });
 
         res.json(doctor.treatedPatients);
@@ -12,8 +11,7 @@ export const getTreatedPatients = async (req, res) => {
     }
 };
 
-// Fetch upcoming appointments
-export const getUpcomingAppointments = async (req, res) => {
+ const getUpcomingAppointments = async (req, res) => {
     try {
         const doctor = await Doctor.findById(req.user.id);
         if (!doctor) return res.status(404).json({ message: "Doctor not found" });
@@ -23,3 +21,6 @@ export const getUpcomingAppointments = async (req, res) => {
         res.status(500).json({ message: "Error fetching appointments" });
     }
 };
+
+
+module.exports = { getTreatedPatients, getUpcomingAppointments };
