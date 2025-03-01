@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import axios from "axios";
 import LogoutButton from "./LogoutBtn";
@@ -6,20 +7,31 @@ const DoctorDashboard = () => {
     const [patients, setPatients] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [queue, setQueue] = useState([]);
-    const token = localStorage.getItem("token");
+    const [publicAppointments, setPublicAppointments] = useState([]); // New state
 
     useEffect(() => {
-        axios.get("/api/doctor/treated-patients", { withCredentials: true })
+        // Fetch treated patients
+        axios.get("/api/doctor/treated-patients")
             .then(response => setPatients(Array.isArray(response.data) ? response.data : []))
             .catch(error => console.error("Error fetching treated patients:", error));
 
-        axios.get("/api/doctor/upcoming-appointments", { withCredentials: true })
+        // Fetch upcoming OPD appointments
+        axios.get("/api/doctor/upcoming-appointments")
             .then(response => setAppointments(Array.isArray(response.data) ? response.data : []))
             .catch(error => console.error("Error fetching appointments:", error));
 
-        // WebSocket connection for OPD queue updates
-        if (!token) return;
-        const ws = new WebSocket("ws://localhost:4000", token);
+        // Fetch initial OPD queue (no authentication required)
+        axios.get("http://localhost:4000/api/opdQueue")
+            .then(response => setQueue(Array.isArray(response.data) ? response.data : []))
+            .catch(error => console.error("Error fetching OPD queue:", error));
+
+        // Fetch all public appointments (NEW FEATURE)
+        axios.get("http://localhost:4000/api/publicAppointments/all")
+            .then(response => setPublicAppointments(Array.isArray(response.data) ? response.data : []))
+            .catch(error => console.error("Error fetching public appointments:", error));
+
+        // WebSocket connection for live OPD queue updates
+        const ws = new WebSocket("ws://localhost:4000");
 
         ws.onmessage = (message) => {
             const data = JSON.parse(message.data);
@@ -29,7 +41,7 @@ const DoctorDashboard = () => {
         };
 
         return () => ws.close();
-    }, [token]);
+    }, []);
 
     return (
         <div className="min-h-screen p-4 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 relative">
@@ -41,7 +53,7 @@ const DoctorDashboard = () => {
             <h2 className="text-2xl font-bold mb-4">Doctor Dashboard</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Treated Patients */}
+               {/* Treated Patients
                 <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
                     <h3 className="text-xl font-semibold mb-2">Treated Patients</h3>
                     <ul>
@@ -52,7 +64,7 @@ const DoctorDashboard = () => {
                 </div>
 
                 {/* Upcoming OPD Appointments */}
-                <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+                {/* <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
                     <h3 className="text-xl font-semibold mb-2">Upcoming OPD Appointments</h3>
                     <ul>
                         {appointments.length ? appointments.map(appt => (
@@ -61,9 +73,9 @@ const DoctorDashboard = () => {
                             </li>
                         )) : <p>No upcoming appointments.</p>}
                     </ul>
-                </div>
+                </div> */}
 
-                {/* OPD Queue System */}
+                {/* OPD Queue System 
                 <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
                     <h3 className="text-xl font-semibold mb-2">Live OPD Queue</h3>
                     <ul>
@@ -73,7 +85,41 @@ const DoctorDashboard = () => {
                             </li>
                         )) : <p>No patients in queue.</p>}
                     </ul>
+                </div> */}
+
+                {/* Public Appointments */}
+                <div className="bg-white dark:bg-gray-800 p-4 rounded shadow col-span-3">
+                    <h3 className="text-xl font-semibold mb-2">Public Appointment Bookings</h3>
+                    <table className="w-full border-collapse border border-gray-500">
+                        <thead>
+                            <tr className="bg-gray-200 dark:bg-gray-700">
+                                <th className="border border-gray-500 px-4 py-2">Patient Name</th>
+                                <th className="border border-gray-500 px-4 py-2">Contact</th>
+                                <th className="border border-gray-500 px-4 py-2">Doctor</th>
+                                <th className="border border-gray-500 px-4 py-2">Department</th>
+                                <th className="border border-gray-500 px-4 py-2">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {publicAppointments.length > 0 ? (
+                                publicAppointments.map(appt => (
+                                    <tr key={appt._id} className="border border-gray-500">
+                                        <td className="border border-gray-500 px-4 py-2">{appt.patientName}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{appt.contactNumber}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{appt.doctorId}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{appt.department}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{new Date(appt.appointmentDate).toLocaleDateString()}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="text-center py-2">No public appointments found.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
     );

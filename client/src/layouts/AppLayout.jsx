@@ -6,11 +6,9 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const AppLayout = () => {
-    const { token, setToken } = useTokenStore((state) => state);
-
 
     return (
-        <div>
+        <div className="flex flex-col min-h-screen bg-gray-100">
             <Navbar />
             <main>
                 <Outlet /> 

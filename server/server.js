@@ -28,6 +28,7 @@ app.use("/api/inventory", require("./routes/inventory"));
 app.use("/api/patient", require("./routes/patientRoutes"));
 app.use("/api/staff", require("./routes/adminRoutes"));
 app.use("/api/doctors", require("./routes/doctorRoutes"));
+app.use("/api/publicAppointments", require("./routes/publicAppointmentRoutes"));
 
 let queue = [];
 

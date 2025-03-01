@@ -12,6 +12,7 @@ import ContactUs from "./components/ContactUs";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import SignupPage from "./pages/SignupPage";
 import QueueSystem from "./components/QueueSystem";
+import BookAppointment from "./components/BookAppointment";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
   {
     path: "/queue",
     element: <QueueSystem />,
+  },
+  {
+    path: "/appointment",
+    element: <BookAppointment/>
   },
 ]);
 
