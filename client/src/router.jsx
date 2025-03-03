@@ -65,11 +65,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/queue",
-    element: <QueueSystem />,
+    element: <AppLayout />,
+    children: [
+      {
+        path : "",
+        element : <QueueSystem/>
+      },
+    ],
   },
   {
     path: "/appointment",
-    element: <BookAppointment/>
+    element: <AppLayout />,
+    children: [
+      {
+        path : "",
+        element : <BookAppointment/>
+      },
+    ],
   },
 ]);
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaUser, FaPhone, FaCalendarAlt, FaHospital } from "react-icons/fa";
+import { FaUser, FaPhone, FaCalendarAlt, FaClock, FaHospital } from "react-icons/fa";
 
 const AppointmentBookingForm = () => {
     const [doctors, setDoctors] = useState([]);
@@ -12,7 +12,8 @@ const AppointmentBookingForm = () => {
         contactNumber: "",
         doctorId: "",
         department: "",
-        appointmentDate: ""
+        appointmentDate: "",
+        appointmentTime: ""  // ✅ Added appointment time field
     });
 
     useEffect(() => {
@@ -41,7 +42,7 @@ const AppointmentBookingForm = () => {
             setFormData({
                 ...formData,
                 doctorId: value,
-                department: selectedDoctor ? selectedDoctor.department : ""  // Auto-update department
+                department: selectedDoctor ? selectedDoctor.department : "" // Auto-update department
             });
         } else {
             setFormData({ ...formData, [name]: value });
@@ -53,7 +54,14 @@ const AppointmentBookingForm = () => {
         try {
             const response = await axios.post("http://localhost:4000/api/publicAppointments/book", formData);
             alert(response.data.message);
-            setFormData({ patientName: "", contactNumber: "", doctorId: "", department: "", appointmentDate: "" });
+            setFormData({
+                patientName: "",
+                contactNumber: "",
+                doctorId: "",
+                department: "",
+                appointmentDate: "",
+                appointmentTime: ""  // ✅ Reset appointment time
+            });
         } catch (error) {
             console.error("Error booking appointment:", error);
         }
@@ -136,6 +144,7 @@ const AppointmentBookingForm = () => {
                                 />
                             </div>
 
+                            {/* Appointment Date */}
                             <div className="flex items-center border border-gray-300 p-3 rounded-md">
                                 <FaCalendarAlt className="text-gray-500 mr-3" />
                                 <input
@@ -147,6 +156,20 @@ const AppointmentBookingForm = () => {
                                     required
                                 />
                             </div>
+
+                            {/* Appointment Time */}
+                            <div className="flex items-center border border-gray-300 p-3 rounded-md">
+                                <FaClock className="text-gray-500 mr-3" />
+                                <input
+                                    type="time"
+                                    name="appointmentTime"
+                                    value={formData.appointmentTime}
+                                    onChange={handleChange}
+                                    className="w-full focus:outline-none"
+                                    required
+                                />
+                            </div>
+
                             <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
                                 Book Appointment
                             </button>

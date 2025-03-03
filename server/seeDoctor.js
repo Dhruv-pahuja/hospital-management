@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const Doctor = require("./models/Doctor"); // Ensure this path is correct
+const Doctor = require("./models/Doctor"); 
 
-dotenv.config(); // Load environment variables
+dotenv.config(); 
 
-// Connect to MongoDB
+
 mongoose
     .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected"))
@@ -12,14 +12,40 @@ mongoose
 
 // Sample doctors data
 const doctors = [
-    { name: "Dr. John Doe", department: "Cardiology", experience: 10 },
-    { name: "Dr. Jane Smith", department: "Neurology", experience: 8 },
+    { 
+        name: "Dr. John Doe", 
+        department: "Cardiology", 
+        description: "Expert in heart diseases and cardiac surgery.", 
+        treatedPatients: [], 
+        appointments: [] 
+    },
+    { 
+        name: "Dr. Jane Smith", 
+        department: "Orthopedics", 
+        description: "Specialist in bone fractures and joint replacements.", 
+        treatedPatients: [], 
+        appointments: [] 
+    },
+    { 
+        name: "Dr. Amit", 
+        department: "General Medicine", 
+        description: "Experienced in diagnosing common illnesses.", 
+        treatedPatients: [], 
+        appointments: [] 
+    },
+    { 
+        name: "Dr. Sushant", 
+        department: "Neurology", 
+        description: "Specialist in brain and nervous system disorders.", 
+        treatedPatients: [], 
+        appointments: [] 
+    }
 ];
 
-// Seed doctors into the database
+
 const seedDoctors = async () => {
     try {
-        await Doctor.deleteMany(); // Clear existing records
+        await Doctor.deleteMany(); 
         await Doctor.insertMany(doctors);
         console.log("Doctors seeded successfully");
         mongoose.connection.close();
@@ -28,5 +54,5 @@ const seedDoctors = async () => {
     }
 };
 
-// Run the function
+
 seedDoctors();

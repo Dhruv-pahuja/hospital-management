@@ -44,9 +44,6 @@ function Home() {
         <Service />
       </section>
 
-      {/* <section className="mt-16">
-            <GoogleTranslate />
-          </section> */}
     </div>
   );
 }

@@ -32,6 +32,7 @@ const Header = () => {
           { name: "Services", path: "/services" },
           { name: "OPD Queue", path: "/queue" },
           { name: "Contact Us", path: "/contactus" },
+          
         ].map(({ name, path }) => (
           <Link key={path} to={path}>
             <button

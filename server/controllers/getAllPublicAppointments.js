@@ -10,4 +10,4 @@ const getAllPublicAppointments = async (req, res) => {
     }
 };
 
-module.exports = { getAllPublicAppointments };  // Exporting as an object
+module.exports = { getAllPublicAppointments };
