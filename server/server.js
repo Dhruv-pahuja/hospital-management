@@ -26,11 +26,13 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/opdQueue", require("./routes/opdQueue"));
 app.use("/api/beds", require("./routes/beds"));
 app.use("/api/inventory", require("./routes/inventory"));
-app.use("/api/patient", require("./routes/patientRoutes"));
+app.use("/api/patients", require("./routes/patientRoutes"));
 app.use("/api/staff", require("./routes/adminRoutes"));
 app.use("/api/doctors", require("./routes/doctorRoutes"));
 app.use("/api/publicAppointments", require("./routes/publicAppointmentRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
+app.use("/api/inventory", require("./routes/inventory"));
+app.use("/api/admin", require("./routes/adminRoutes"));
 
 // Function to fetch and update today's OPD queue
 const fetchTodayQueue = async () => {

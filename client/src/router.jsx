@@ -4,15 +4,18 @@ import AppLayout from "./layouts/AppLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import DoctorDashboard from "./components/doctor-dashboard";
 import PatientDashboard from "./components/patient-dashboard";
-import AdminDashboard from "./components/admin-dashboard";
+// import AdminDashboard from "./components/admin-dashboard";
 import Home from "./components/Home";
 import Specialists from "./components/Specialists";
 import Services from "./components/Services";
 import ContactUs from "./components/ContactUs";
-import ProtectedRoute from "./components/ProtectedRoute"; 
+// import ProtectedRoute from "./components/ProtectedRoute"; 
 import SignupPage from "./pages/SignupPage";
 import QueueSystem from "./components/QueueSystem";
 import BookAppointment from "./components/BookAppointment";
+import Inventory from "./components/Inventory";
+import Patients from "./components/Patients";
+import Doctors from "./components/Doctors";
 
 const router = createBrowserRouter([
   {
@@ -39,11 +42,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: "doctor",
-        element: (
-          // <ProtectedRoute allowedRoles={["doctor"]}>
-            <DoctorDashboard />
-          // </ProtectedRoute>
-        ),
+        element: <DoctorDashboard />
+
       },
       {
         path: "patient",
@@ -55,11 +55,11 @@ const router = createBrowserRouter([
       },
       {
         path: "admin",
-        element: (
-          <ProtectedRoute allowedRoles={["admin", "staff"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        ),
+        children : [
+          {path : 'inventory', element : <Inventory/>},
+          {path : "patients", element : <Patients/>},
+          {path : "doctors", element : <Doctors/>},
+        ],
       },
     ],
   },
