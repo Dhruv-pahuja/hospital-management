@@ -39,7 +39,7 @@ const QueueComponent = () => {
                 {queue.appointments.map((appt, index) => (
                   <li key={index} className="border-b py-2 text-gray-700">
                     <span className="font-medium">{appt.patientName}</span>  
-                    <span className="ml-2 text-sm text-gray-500">{appt.appointmentTime}</span>
+                    {/* <span className="ml-2 text-sm text-gray-500">{appt.appointmentTime}</span> */}
                     <span className={`ml-2 px-2 py-1 rounded-full text-xs font-semibold ${appt.status === "pending" ? "bg-yellow-200 text-yellow-800" : "bg-green-200 text-green-800"}`}>
                       {appt.status}
                     </span>

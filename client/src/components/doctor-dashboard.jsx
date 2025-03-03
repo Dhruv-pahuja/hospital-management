@@ -47,7 +47,7 @@ const DoctorDashboard = () => {
                                 <th className="border px-4 py-2">Contact</th>
                                 <th className="border px-4 py-2">Doctor</th>
                                 <th className="border px-4 py-2">Date</th>
-                                <th className="border px-4 py-2">Time</th>
+                                {/* <th className="border px-4 py-2">Time</th> */}
                                 <th className="border px-4 py-2">Status</th>
                                 <th className="border px-4 py-2">Actions</th>
                             </tr>
@@ -59,7 +59,7 @@ const DoctorDashboard = () => {
                                     <td className="border px-4 py-2">{appt.contactNumber}</td>
                                     <td className="border px-4 py-2">{appt.doctorId}</td>
                                     <td className="border px-4 py-2">{new Date(appt.appointmentDate).toLocaleDateString()}</td>
-                                    <td className="border px-4 py-2">{appt.appointmentTime}</td>
+                                    {/* <td className="border px-4 py-2">{appt.appointmentTime}</td> */}
                                     <td className="border px-4 py-2">{appt.status || "Pending"}</td>
                                     <td className="border px-4 py-2">
                                         {appt.status === "pending" && (
