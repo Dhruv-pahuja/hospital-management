@@ -1,4 +1,4 @@
-const Patient = require("../models/patient");
+const Patient = require("../models/Patient");
 
 // Fetch medical data for the logged-in patient
 const getMedicalData = async (req, res) => {
