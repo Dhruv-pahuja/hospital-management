@@ -30,6 +30,7 @@ app.use("/api/patient", require("./routes/patientRoutes"));
 app.use("/api/staff", require("./routes/adminRoutes"));
 app.use("/api/doctors", require("./routes/doctorRoutes"));
 app.use("/api/publicAppointments", require("./routes/publicAppointmentRoutes"));
+app.use("/api/contact", require("./routes/contactRoutes"));
 
 // Function to fetch and update today's OPD queue
 const fetchTodayQueue = async () => {
