@@ -34,4 +34,29 @@ const getAvailableDoctors = async (req, res) => {
     }
 };
 
-module.exports = { bookAppointment, getAvailableDoctors };
+const updateAppointmentStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!["pending", "completed", "cancelled"].includes(status)) {
+            return res.status(400).json({ error: "Invalid status value" });
+        }
+
+        const appointment = await PublicAppointment.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+
+        if (!appointment) {
+            return res.status(404).json({ error: "Appointment not found" });
+        }
+
+        res.json({ message: "Appointment status updated", appointment });
+    } catch (error) {
+        res.status(500).json({ error: "Error updating appointment status" });
+    }
+};
+
+module.exports = { bookAppointment, getAvailableDoctors, updateAppointmentStatus };

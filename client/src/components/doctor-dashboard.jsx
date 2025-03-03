@@ -1,126 +1,88 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import axios from "axios";
 import LogoutButton from "./LogoutBtn";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const DoctorDashboard = () => {
-    const [patients, setPatients] = useState([]);
-    const [appointments, setAppointments] = useState([]);
-    const [queue, setQueue] = useState([]);
-    const [publicAppointments, setPublicAppointments] = useState([]); // New state
+    const [publicAppointments, setPublicAppointments] = useState([]);
 
     useEffect(() => {
-        // Fetch treated patients
-        axios.get("/api/doctor/treated-patients")
-            .then(response => setPatients(Array.isArray(response.data) ? response.data : []))
-            .catch(error => console.error("Error fetching treated patients:", error));
-
-        // Fetch upcoming OPD appointments
-        axios.get("/api/doctor/upcoming-appointments")
-            .then(response => setAppointments(Array.isArray(response.data) ? response.data : []))
-            .catch(error => console.error("Error fetching appointments:", error));
-
-        // Fetch initial OPD queue (no authentication required)
-        axios.get("http://localhost:4000/api/opdQueue")
-            .then(response => setQueue(Array.isArray(response.data) ? response.data : []))
-            .catch(error => console.error("Error fetching OPD queue:", error));
-
-        // Fetch all public appointments (NEW FEATURE)
-        axios.get("http://localhost:4000/api/publicAppointments/all")
+        axios.get(`${API_URL}/api/publicAppointments/all`)
             .then(response => setPublicAppointments(Array.isArray(response.data) ? response.data : []))
             .catch(error => console.error("Error fetching public appointments:", error));
-
-        // WebSocket connection for live OPD queue updates
-        const ws = new WebSocket("ws://localhost:4000");
-
-        ws.onmessage = (message) => {
-            const data = JSON.parse(message.data);
-            if (data.type === "queue") {
-                setQueue(data.queue);
-            }
-        };
-
-        return () => ws.close();
     }, []);
+
+    const groupedAppointments = publicAppointments.reduce((acc, appt) => {
+        acc[appt.department] = acc[appt.department] || [];
+        acc[appt.department].push(appt);
+        return acc;
+    }, {});
+
+    const updateStatus = (id, status) => {
+        axios.put(`${API_URL}/api/publicAppointments/update-status/${id}`, { status })
+            .then(() => {
+                setPublicAppointments(prev =>
+                    prev.map(appt => appt._id === id ? { ...appt, status } : appt)
+                );
+            })
+            .catch(error => console.error("Error updating status:", error));
+    };
 
     return (
         <div className="min-h-screen p-4 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 relative">
-            {/* Logout Button - Positioned at top right */}
             <div className="absolute top-4 right-4">
                 <LogoutButton />
             </div>
 
             <h2 className="text-2xl font-bold mb-4">Doctor Dashboard</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-               {/* Treated Patients
-                <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-                    <h3 className="text-xl font-semibold mb-2">Treated Patients</h3>
-                    <ul>
-                        {patients.length ? patients.map(patient => (
-                            <li key={patient.id} className="border-b py-2">{patient.name}</li>
-                        )) : <p>No treated patients found.</p>}
-                    </ul>
-                </div>
-
-                {/* Upcoming OPD Appointments */}
-                {/* <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-                    <h3 className="text-xl font-semibold mb-2">Upcoming OPD Appointments</h3>
-                    <ul>
-                        {appointments.length ? appointments.map(appt => (
-                            <li key={appt.id} className="border-b py-2">
-                                {appt.patientName} - {new Date(appt.date).toLocaleDateString()}
-                            </li>
-                        )) : <p>No upcoming appointments.</p>}
-                    </ul>
-                </div> */}
-
-                {/* OPD Queue System 
-                <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-                    <h3 className="text-xl font-semibold mb-2">Live OPD Queue</h3>
-                    <ul>
-                        {queue.length > 0 ? queue.map((user, index) => (
-                            <li key={user.id} className="border-b py-2">
-                                {index + 1}. {user.name}
-                            </li>
-                        )) : <p>No patients in queue.</p>}
-                    </ul>
-                </div> */}
-
-                {/* Public Appointments */}
-                <div className="bg-white dark:bg-gray-800 p-4 rounded shadow col-span-3">
-                    <h3 className="text-xl font-semibold mb-2">Public Appointment Bookings</h3>
+            {Object.entries(groupedAppointments).map(([department, appointments]) => (
+                <div key={department} className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
+                    <h3 className="text-xl font-semibold mb-2">{department} Appointments</h3>
                     <table className="w-full border-collapse border border-gray-500">
                         <thead>
                             <tr className="bg-gray-200 dark:bg-gray-700">
-                                <th className="border border-gray-500 px-4 py-2">Patient Name</th>
-                                <th className="border border-gray-500 px-4 py-2">Contact</th>
-                                <th className="border border-gray-500 px-4 py-2">Doctor</th>
-                                <th className="border border-gray-500 px-4 py-2">Department</th>
-                                <th className="border border-gray-500 px-4 py-2">Date</th>
+                                <th className="border px-4 py-2">Patient Name</th>
+                                <th className="border px-4 py-2">Contact</th>
+                                <th className="border px-4 py-2">Doctor</th>
+                                <th className="border px-4 py-2">Date</th>
+                                <th className="border px-4 py-2">Time</th>
+                                <th className="border px-4 py-2">Status</th>
+                                <th className="border px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {publicAppointments.length > 0 ? (
-                                publicAppointments.map(appt => (
-                                    <tr key={appt._id} className="border border-gray-500">
-                                        <td className="border border-gray-500 px-4 py-2">{appt.patientName}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{appt.contactNumber}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{appt.doctorId}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{appt.department}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{new Date(appt.appointmentDate).toLocaleDateString()}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="5" className="text-center py-2">No public appointments found.</td>
+                            {appointments.map(appt => (
+                                <tr key={appt._id} className="border">
+                                    <td className="border px-4 py-2">{appt.patientName}</td>
+                                    <td className="border px-4 py-2">{appt.contactNumber}</td>
+                                    <td className="border px-4 py-2">{appt.doctorId}</td>
+                                    <td className="border px-4 py-2">{new Date(appt.appointmentDate).toLocaleDateString()}</td>
+                                    <td className="border px-4 py-2">{appt.appointmentTime}</td>
+                                    <td className="border px-4 py-2">{appt.status || "Pending"}</td>
+                                    <td className="border px-4 py-2">
+                                        {appt.status === "pending" && (
+                                            <>
+                                                <button
+                                                    onClick={() => updateStatus(appt._id, "completed")}
+                                                    className="bg-green-500 text-white px-2 py-1 rounded mr-2">
+                                                    Complete
+                                                </button>
+                                                <button
+                                                    onClick={() => updateStatus(appt._id, "cancelled")}
+                                                    className="bg-red-500 text-white px-2 py-1 rounded">
+                                                    Cancel
+                                                </button>
+                                            </>
+                                        )}
+                                    </td>
                                 </tr>
-                            )}
+                            ))}
                         </tbody>
                     </table>
                 </div>
-
-            </div>
+            ))}
         </div>
     );
 };
