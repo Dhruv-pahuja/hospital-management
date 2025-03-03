@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import AppLayout from "./layouts/AppLayout";
-import AuthLayout from "./layouts/AuthLayout";
+import AuthLayout from "./layouts/authLayout";
 import DoctorDashboard from "./components/doctor-dashboard";
 import PatientDashboard from "./components/patient-dashboard";
 // import AdminDashboard from "./components/admin-dashboard";
