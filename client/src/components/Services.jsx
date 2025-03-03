@@ -8,7 +8,7 @@ const servicesData = [
     description:
       "Comprehensive heart care including diagnosis and treatment of heart diseases.",
     icon: <FaHeartbeat className="text-4xl text-red-600" />,
-    imgSrc: "https://via.placeholder.com/150",
+    imgSrc: "/cardiology.jpeg",
   },
   {
     id: 2,
@@ -16,14 +16,14 @@ const servicesData = [
     description:
       "Expert care for neurological disorders including brain and spinal issues.",
     icon: <FaCogs className="text-4xl text-blue-600" />,
-    imgSrc: "https://via.placeholder.com/150",
+    imgSrc: "/neurology.jpeg",
   },
   {
     id: 3,
     title: "Orthopedics",
     description: "Treatment of musculoskeletal injuries and conditions.",
     icon: <FaShieldAlt className="text-4xl text-green-600" />,
-    imgSrc: "https://via.placeholder.com/150",
+    imgSrc: "/Orthopedics-2.jpg",
   },
   {
     id: 4,
@@ -31,7 +31,7 @@ const servicesData = [
     description:
       "General health check-ups and treatment for a variety of conditions.",
     icon: <FaUsers className="text-4xl text-yellow-600" />,
-    imgSrc: "https://via.placeholder.com/150",
+    imgSrc: "general-medicine.jpeg",
   },
 ];
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaUserMd, FaSearch } from "react-icons/fa";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Specialists = () => {
   const [doctors, setDoctors] = useState([]);
@@ -54,9 +55,9 @@ const Specialists = () => {
                   {doctor.department}
                 </h3>
                 <p className="text-gray-700 mb-4">{doctor.description}</p>
-                <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                <Link to={'/appointment'} className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
                   Book Appointment
-                </button>
+                </Link>
               </div>
             </div>
           ))}

@@ -14,9 +14,9 @@ function Main() {
         </p>
 
         <div className="flex mx-auto space-x-4">
-          <button className="w-[210px] px-6 py-4 rounded-full bg-blue-500 text-white font-semibold text-lg hover:bg-blue-600 transition duration-300 shadow-lg">
-            <Link to={"/appointment"}>Book an Appointment</Link>
-          </button>
+          <Link to={'/appointment'} className="w-[210px] px-6 py-4 rounded-full bg-blue-500 text-white font-semibold text-lg hover:bg-blue-600 transition duration-300 shadow-lg">
+            Book an Appointment
+          </Link>
         </div>
       </div>
       <div className="flex justify-center w-[50%]">
