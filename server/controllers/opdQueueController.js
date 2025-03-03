@@ -1,4 +1,4 @@
-const Appointment = require("../models/appointment");
+const Appointment = require("../models/Appointment");
 
 const joinQueue = async (req, res) => {
     try {
